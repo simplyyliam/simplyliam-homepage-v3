@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box } from "./box";
+import { Box } from "./modals/box";
 import { ThemeToggle } from "./ThemeSwitcher";
 import { useTheme } from "next-themes";
 
