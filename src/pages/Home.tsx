@@ -8,32 +8,45 @@ import { CustomButton } from "../components/ui/modals/CustomButton";
 import { NavModel } from "../components/ui/modals/nav";
 import { NavShell } from "../components/ui/modals/NavShell";
 import ElementFrame from "../components/ui/frame";
+import { Star } from "../components/ui/modals/GraphicElements";
 
 function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [showHome, setShowHome] = useState(false);
-  const [intro, Intro] = useState(true);
+  const [intro, setIntro] = useState(true);
+
   const messageRef = useRef<HTMLInputElement>(null);
   const sendRef = useRef<HTMLDivElement>(null);
+  const Eye_L_Ref = useRef<HTMLSpanElement>(null);
+  const Eye_R_Ref = useRef<HTMLSpanElement>(null);
+  const Blink_L_Ref = useRef<HTMLSpanElement>(null);
+  const Blink_R_Ref = useRef<HTMLSpanElement>(null);
+  const heroTextRef = useRef(null)
+  const SendMessageRef = useRef(null)
+  const navRef = useRef(null)
 
-  useEffect(() => {
-    const handleInput = () => {
-      const input = messageRef.current?.value;
-      setIsTyping(!!input);
-    };
 
-    const inputElem = messageRef.current;
-    if (inputElem) {
-      inputElem.addEventListener("input", handleInput);
-      inputElem.style.textAlign = isTyping ? "left" : "center";
+useEffect(() => {
+  const handleInput = () => {
+    const input = messageRef.current?.value;
+    setIsTyping(!!input);
+
+    if (messageRef.current) {
+      messageRef.current.style.textAlign = input ? "left" : "center";
     }
+  };
 
-    return () => {
-      if (inputElem) {
-        inputElem.removeEventListener("input", handleInput);
-      }
-    };
-  }, [isTyping]);
+  const inputElem = messageRef.current;
+  if (inputElem) {
+    inputElem.addEventListener("input", handleInput);
+  }
+
+  return () => {
+    if (inputElem) {
+      inputElem.removeEventListener("input", handleInput);
+    }
+  };
+}, []);
 
   useEffect(() => {
     if (isTyping && sendRef.current) {
@@ -46,23 +59,89 @@ function Home() {
     }
   }, [isTyping]);
 
-  //To animate everything in order, add a useEffect with cronological layer animations. This only happens when the intro state becomes false.
+  //Intro Animation
+  useEffect(() => {
+    const tl = gsap.timeline()
+
+    if (Eye_L_Ref && Eye_R_Ref) {
+
+      tl.call(() => setIntro(true))
+
+      // Blink 1
+      tl.to([Eye_L_Ref.current, Eye_R_Ref.current], { height: 0, duration: 0.08, ease: "linear" })
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 0.7, scale: 1.3, duration: 0.08, ease: "linear" }, "<")
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 1, scale: 2.5, duration: 0.12, ease: "expo.out" })
+      tl.to([Eye_L_Ref.current, Eye_R_Ref.current], { height: 66, duration: 0.11, ease: "linear" }) 
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 0, scale: 0, duration: 0.09, ease: "linear" }, "<")
+
+      // short pause
+      tl.to({}, { duration: 0.25 }) 
+
+      // Blink 2
+      tl.to([Eye_L_Ref.current, Eye_R_Ref.current], { height: 0, duration: 0.07, ease: "linear" })
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 1, scale: 1.2, duration: 0.07, ease: "linear" }, "<")
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 0, scale: 2.2, duration: 0.11, ease: "expo.out" })
+      tl.to([Eye_L_Ref.current, Eye_R_Ref.current], { height: 66, duration: 0.10, ease: "linear" })
+      tl.to([Blink_L_Ref.current, Blink_R_Ref.current], { opacity: 0, scale: 0, duration: 0.08, ease: "linear" }, "<")
+
+      // Final close and Pause
+      tl.to({}, { duration: 0.35 })
+      tl.to([Eye_L_Ref.current, Eye_R_Ref.current], { height: 0, opacity: 0, duration: 0.18, ease: "expo.in" })
+
+      tl.call(() => setIntro(false))
+      tl.call(() => setShowHome(true))
+
+      return () => {
+        tl.kill()
+      }
+      
+   }
+  }, []);
+
+  useEffect(() => {
+    const tl = gsap.timeline()
+
+    if (showHome) {
+      tl.to(heroTextRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" })
+      tl.to(navRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, "-=0.3")
+      tl.to(SendMessageRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, "-=0.3")
+    }
+    
+  }, [showHome])
+
+
 
   return (
     <HomeWrapper>
       {intro && (
         <div className="flex items-center justify-center w-[97%] h-[97%] border border-[#6B6B6B]  rounded-xl">
           {/* Blinking Eyes */}
-          <div className="flex items-center justify-between w-[25em] h-[16em] p-18">
-            <div className="w-21 h-16.5 bg-stone-900 rounded-2xl"></div>
-            <div className="w-21 h-16.5 bg-stone-900 rounded-2xl"></div>
+          <div className="flex items-center justify-between w-[25em] h-[16em] p-18 relative">
+            <span
+              ref={Eye_L_Ref}
+              className="w-[84px] h-[66px] bg-stone-900 rounded-2xl"
+            ></span>
+            <span
+              ref={Eye_R_Ref}
+              className="w-[84px] h-[66px]  bg-stone-900 rounded-2xl"
+            ></span>
+            <div className="flex items-center justify-between w-[25em] px-10 absolute bottom-18 left-0">
+              <span ref={Blink_L_Ref}>
+                <Star />
+              </span>
+              <span ref={Blink_R_Ref}>
+                <Star />
+              </span>
+            </div>
           </div>
           <ElementFrame />
         </div>
       )}
+
+
       {showHome && (
         <>
-          <NavModel>
+          <NavModel ref={navRef} className="opacity-0 scale-0">
             <Avatar>
               <div className="relative w-[44px] h-[44px] flex items-centere justify-center">
                 <img src="/sprite.png" alt="A simplyliam sprite" />
@@ -74,14 +153,13 @@ function Home() {
               <CustomButton>Contact</CustomButton>
             </NavShell>
           </NavModel>
-          <div className="flex flex-col text-center items-centere justify-center p-4 gap-4 text-black">
-            <h1 className="text-9xl font-medium">Hey, I'm Liam</h1>
-            <p className="text-3xl italic font-extralight opacity-50">
+          <div ref={heroTextRef} className="flex flex-col text-center items-centere justify-center p-4 gap-4 text-black opacity-0 scale-0">
+            <h1  className="text-9xl font-medium">Hey, I'm Liam</h1>
+            <p  className="text-3xl italic font-extralight opacity-50">
               Welcome to My World
             </p>
           </div>
-
-          <Message>
+          <Message ref={SendMessageRef} className="opacity-0 scale-0">
             <CustomInput ref={messageRef} />
             {isTyping && (
               <div ref={sendRef} className="opacity-0 scale-0">

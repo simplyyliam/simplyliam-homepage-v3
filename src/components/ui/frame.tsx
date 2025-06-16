@@ -1,4 +1,4 @@
-import { PlusElement } from "./modals/PlusElement";
+import { PlusElement } from "./modals/GraphicElements";
 
 function ElementFrame() {
   return (
