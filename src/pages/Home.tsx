@@ -11,6 +11,8 @@ import ElementFrame from "../components/ui/frame";
 import { Star } from "../components/ui/modals/GraphicElements";
 import { AboutWrapper } from "../components/ui/AboutWrapper";
 import { IntroWrapper } from "../components/ui/modals/IntroWrapper";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 
 function Home() {
   const [isTyping, setIsTyping] = useState(false);
@@ -26,10 +28,13 @@ function Home() {
   const heroTextRef = useRef(null)
   const SendMessageRef = useRef(null)
   const navRef = useRef(null)
-  const aboutRef = useRef<HTMLDivElement>(null)
+  const aboutRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
+  const homeRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
+  const aboutContainerRef = useRef(null)
+  const aboutSectionRef = useRef(null)
+  const experienceSectionRef = useRef(null)
 
-
-
+  gsap.registerPlugin(ScrollTrigger);
 
   //Intro Animation
   useEffect(() => {
@@ -124,6 +129,7 @@ function Home() {
   const handleNav = (navLabel: string) => {
     const refs: Record<string, React.RefObject<HTMLDivElement>> = {
       About: aboutRef,
+      Home: homeRef,
     }
 
     const sectionRef = refs[navLabel]
@@ -132,9 +138,40 @@ function Home() {
     }
   }
 
+  useEffect(() => {
+    if (!aboutRef.current || !aboutContainerRef.current) return;
+
+    const tl = gsap.timeline({
+      paused: true,
+    });
+
+    tl.fromTo(
+      aboutContainerRef.current,
+      { y: 100, opacity: 0, scale: 0.95 },
+      {
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.2,
+        ease: "linear",
+      }
+    );
+
+    const scrollTrigger = ScrollTrigger.create({
+      trigger: aboutRef.current,
+      start: "top 50%",
+      onEnter: () => tl.play(),
+      once: true,
+    });
+
+    return () => {
+      tl.kill();
+      scrollTrigger.kill();
+    };
+  }, [showHome]);
+
   return (
     <>
-      {" "}
       {intro && (
         <IntroWrapper>
           <div className="flex items-center justify-center w-[30%] h-[50%] border  border-[#6B6B6B] rounded-xl ">
@@ -163,12 +200,12 @@ function Home() {
       )}
       {showHome && (
         <HomeWrapper>
-          <div className="flex items-center justify-center w-screen h-screen">
+          <div ref={homeRef} className="flex items-center justify-center w-screen h-screen">
             <NavModel ref={navRef} className="opacity-0 scale-x-0">
               <Avatar>
-                <div className="relative w-[44px] h-[44px] flex items-centere justify-center">
+                <button onClick={() => handleNav('Home')} className="relative w-[44px] h-[44px] flex items-centere justify-center">
                   <img src="/sprite.png" alt="A simplyliam sprite" />
-                </div>
+                </button>
               </Avatar>
               <NavShell>
                 <CustomButton onClick={() => handleNav("Projects")}>Projects</CustomButton>
@@ -194,13 +231,18 @@ function Home() {
               )}
             </Message>
           </div>
-          <AboutWrapper ref={aboutRef} className="">
-              <div className="flex flex-col w-[97%] h-[97%] rounded-2xl overflow-auto">
-                <div className="w-full min-h-[300%] bg-stone-500">
-                    <div className="w-full h-[100vh]"></div>
-                    <div className="w-full h-[100vh]"></div>
+          <AboutWrapper ref={aboutRef} className="relative overflow-hidden h-[150vh]">
+              <div ref={aboutContainerRef} className="absolute w-[97%] h-[97%] flex flex-col rounded-2xl transition-all duration-300 overflow-auto">
+                <div className="w-full min-h-full overflow-x-hidden  text-black">
+                    <div ref={aboutSectionRef} className="flex items-center justify-center w-full h-[100vh] bg-slate-200">
+                    <h1 className="text-[23em] font-semibold mix-blend-overlay">ABOUT</h1>
+                    </div> 
+                    <div ref={experienceSectionRef} className="flex items-center justify-center w-full h-[100vh] bg-slate-200">
+                    <h1 className="text-[13em] font-semibold mix-blend-overlay">EXPERIENCE</h1>
+                    </div> 
                 </div>
               </div>
+
           </AboutWrapper>
         </HomeWrapper>
       )}

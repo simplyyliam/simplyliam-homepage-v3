@@ -6,7 +6,7 @@ export const NavModel = forwardRef<HTMLDivElement, HtmlHTMLAttributes<HTMLDivEle
         return (
             <div
                 ref={ref}
-                className={`flex items-center justify-between gap-7 h-[72px] bg-[#14141425] p-[8px] rounded-[26px] absolute top-10 text-white ${className}`}
+                className={`flex items-center justify-between gap-7 h-[72px] bg-[#14141425] p-[8px] rounded-[26px] top-10 text-white fixed z-1 backdrop-blur-[10px] ${className}`}
                 {...props}
             >
                 {children}
