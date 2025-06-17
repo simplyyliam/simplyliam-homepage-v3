@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { HomeWrapper } from "../components/ui/modals/HomeWrapper";
 import { Message } from "../components/ui/modals/MessageMe";
 import { CustomInput } from "../components/ui/modals/Input";
@@ -9,6 +9,8 @@ import { NavModel } from "../components/ui/modals/nav";
 import { NavShell } from "../components/ui/modals/NavShell";
 import ElementFrame from "../components/ui/frame";
 import { Star } from "../components/ui/modals/GraphicElements";
+import { AboutWrapper } from "../components/ui/AboutWrapper";
+import { IntroWrapper } from "../components/ui/modals/IntroWrapper";
 
 function Home() {
   const [isTyping, setIsTyping] = useState(false);
@@ -24,40 +26,10 @@ function Home() {
   const heroTextRef = useRef(null)
   const SendMessageRef = useRef(null)
   const navRef = useRef(null)
+  const aboutRef = useRef<HTMLDivElement>(null)
 
 
-useEffect(() => {
-  const handleInput = () => {
-    const input = messageRef.current?.value;
-    setIsTyping(!!input);
 
-    if (messageRef.current) {
-      messageRef.current.style.textAlign = input ? "left" : "center";
-    }
-  };
-
-  const inputElem = messageRef.current;
-  if (inputElem) {
-    inputElem.addEventListener("input", handleInput);
-  }
-
-  return () => {
-    if (inputElem) {
-      inputElem.removeEventListener("input", handleInput);
-    }
-  };
-}, []);
-
-  useEffect(() => {
-    if (isTyping && sendRef.current) {
-      gsap.to(sendRef.current, {
-        opacity: 1,
-        scale: 1,
-        duration: 0.4,
-        ease: "expo.out",
-      });
-    }
-  }, [isTyping]);
 
   //Intro Animation
   useEffect(() => {
@@ -95,7 +67,7 @@ useEffect(() => {
         tl.kill()
       }
       
-   }
+    }
   }, []);
 
   useEffect(() => {
@@ -104,72 +76,135 @@ useEffect(() => {
     if (showHome) {
       tl.to(heroTextRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" })
       tl.to(navRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, "-=0.3")
-      tl.to(SendMessageRef.current, { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" }, "-=0.3")
+      tl.to(SendMessageRef.current, { scale: 1, opacity: 1, bottom: 20, duration: 0.5, ease: "expo.out" }, "-=0.3")
+      return () => {
+        tl.kill()
+      }
     }
     
   }, [showHome])
 
+  useEffect(() => {
+    if (!showHome) return;
 
+  const handleInput = () => {
+    const input = messageRef.current?.value;
+    setIsTyping(!!input);
+
+    if (messageRef.current) {
+      messageRef.current.style.textAlign = input ? "left" : "center";
+    }
+  };
+
+  const inputElem = messageRef.current;
+  if (inputElem) {
+    inputElem.addEventListener("input", handleInput);
+  }
+
+  return () => {
+    if (inputElem) {
+      inputElem.removeEventListener("input", handleInput);
+    }
+  };
+}, [showHome]);
+
+  useEffect(() => {
+    if (sendRef.current) {
+      if (isTyping) {
+        gsap.to(sendRef.current, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.4,
+          ease: "expo.out",
+        });
+      }
+    }
+  }, [isTyping]);
+
+  const handleNav = (navLabel: string) => {
+    const refs: Record<string, React.RefObject<HTMLDivElement>> = {
+      About: aboutRef,
+    }
+
+    const sectionRef = refs[navLabel]
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({behavior: "smooth"}) 
+    }
+  }
 
   return (
-    <HomeWrapper>
+    <>
+      {" "}
       {intro && (
-        <div className="flex items-center justify-center w-[97%] h-[97%] border border-[#6B6B6B]  rounded-xl">
-          {/* Blinking Eyes */}
-          <div className="flex items-center justify-between w-[25em] h-[16em] p-18 relative">
-            <span
-              ref={Eye_L_Ref}
-              className="w-[84px] h-[66px] bg-stone-900 rounded-2xl"
-            ></span>
-            <span
-              ref={Eye_R_Ref}
-              className="w-[84px] h-[66px]  bg-stone-900 rounded-2xl"
-            ></span>
-            <div className="flex items-center justify-between w-[25em] px-10 absolute bottom-18 left-0">
-              <span ref={Blink_L_Ref}>
-                <Star />
-              </span>
-              <span ref={Blink_R_Ref}>
-                <Star />
-              </span>
+        <IntroWrapper>
+          <div className="flex items-center justify-center w-[30%] h-[50%] border  border-[#6B6B6B] rounded-xl ">
+            {/* Blinking Eyes */}
+            <div className="flex items-center justify-between w-[25em] h-[16em] p-18 relative">
+              <span
+                ref={Eye_L_Ref}
+                className="w-[84px] h-[66px] bg-stone-900 rounded-2xl"
+              ></span>
+              <span
+                ref={Eye_R_Ref}
+                className="w-[84px] h-[66px]  bg-stone-900 rounded-2xl"
+              ></span>
+              <div className="flex items-center justify-between w-[25em] px-10 absolute bottom-18 left-0">
+                <span ref={Blink_L_Ref}>
+                  <Star />
+                </span>
+                <span ref={Blink_R_Ref}>
+                  <Star />
+                </span>
+              </div>
             </div>
+            <ElementFrame />
           </div>
-          <ElementFrame />
-        </div>
+        </IntroWrapper>
       )}
-
-
       {showHome && (
-        <>
-          <NavModel ref={navRef} className="opacity-0 scale-0">
-            <Avatar>
-              <div className="relative w-[44px] h-[44px] flex items-centere justify-center">
-                <img src="/sprite.png" alt="A simplyliam sprite" />
-              </div>
-            </Avatar>
-            <NavShell>
-              <CustomButton>Projects</CustomButton>
-              <CustomButton>About</CustomButton>
-              <CustomButton>Contact</CustomButton>
-            </NavShell>
-          </NavModel>
-          <div ref={heroTextRef} className="flex flex-col text-center items-centere justify-center p-4 gap-4 text-black opacity-0 scale-0">
-            <h1  className="text-9xl font-medium">Hey, I'm Liam</h1>
-            <p  className="text-3xl italic font-extralight opacity-50">
-              Welcome to My World
-            </p>
+        <HomeWrapper>
+          <div className="flex items-center justify-center w-screen h-screen">
+            <NavModel ref={navRef} className="opacity-0 scale-x-0">
+              <Avatar>
+                <div className="relative w-[44px] h-[44px] flex items-centere justify-center">
+                  <img src="/sprite.png" alt="A simplyliam sprite" />
+                </div>
+              </Avatar>
+              <NavShell>
+                <CustomButton onClick={() => handleNav("Projects")}>Projects</CustomButton>
+                <CustomButton onClick={() => handleNav("About")}>About</CustomButton>
+                <CustomButton onClick={() => handleNav("Contact")}>Contact</CustomButton>
+              </NavShell>
+            </NavModel>
+            <div
+              ref={heroTextRef}
+              className="flex flex-col text-center items-centere justify-center p-4 gap-4 text-black opacity-0 scale-0"
+            >
+              <h1 className="text-9xl font-medium">Hey, I'm Liam</h1>
+              <p className="text-3xl italic font-extralight opacity-50">
+                Welcome to My World
+              </p>
+            </div>
+            <Message ref={SendMessageRef} className="opacity-0 scale-0">
+              <CustomInput ref={messageRef} />
+              {isTyping && (
+                <div ref={sendRef} className="opacity-0 scale-0">
+                  <button className="w-14 h-9 bg-[#0d0d0d30] rounded-[10px] cursor-pointer"></button>
+                </div>
+              )}
+            </Message>
           </div>
-          <Message ref={SendMessageRef} className="opacity-0 scale-0">
-            <CustomInput ref={messageRef} />
-            {isTyping && (
-              <div ref={sendRef} className="opacity-0 scale-0">
-                <button className="w-14 h-9 bg-[#0d0d0d30] rounded-[10px] cursor-pointer"></button>
+          <AboutWrapper ref={aboutRef} className="">
+              <div className="flex flex-col w-[97%] h-[97%] rounded-2xl overflow-auto">
+                <div className="w-full min-h-[300%] bg-stone-500">
+                    <div className="w-full h-[100vh]"></div>
+                    <div className="w-full h-[100vh]"></div>
+                </div>
               </div>
-            )}
-          </Message>
-        </>
+          </AboutWrapper>
+        </HomeWrapper>
       )}
-    </HomeWrapper>
+    </>
   );
 }
 

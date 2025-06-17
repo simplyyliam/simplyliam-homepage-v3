@@ -7,7 +7,7 @@ export const HomeWrapper: React.FC<HtmlHTMLAttributes<HTMLDivElement>> = ({
     children, className, ...props
 }) => {
     return (
-        <div className={`flex items-center justify-center w-screen h-screen bg-[#fffff5] ${className} 
+        <div className={`flex flex-col items-center justify-center bg-[#fffff5] ${className} 
             
         `} {...props}>{children}</div>
     )

@@ -6,7 +6,7 @@ export const Message = forwardRef<HTMLDivElement, HtmlHTMLAttributes<HTMLDivElem
     return (
       <div
         ref={ref}
-        className={`flex items-center justify-center px-[10px] absolute bottom-5 rounded-[19px] bg-[#0d0d0d25] ${className}`}
+        className={`flex items-center justify-center px-[10px] absolute -bottom-full rounded-[19px] bg-[#0d0d0d25] ${className}`}
         {...props}
       >
         {children}
