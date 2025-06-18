@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HomeWrapper } from "../components/ui/modals/HomeWrapper";
 import { Message } from "../components/ui/modals/MessageMe";
 import { CustomInput } from "../components/ui/modals/Input";
@@ -9,7 +9,6 @@ import { NavModel } from "../components/ui/modals/nav";
 import { NavShell } from "../components/ui/modals/NavShell";
 import ElementFrame from "../components/ui/frame";
 import { Star } from "../components/ui/modals/GraphicElements";
-import { AboutWrapper } from "../components/ui/AboutWrapper";
 import { IntroWrapper } from "../components/ui/modals/IntroWrapper";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -18,6 +17,7 @@ function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [intro, setIntro] = useState(true);
+  const [window, setWindow] = useState('Home')
 
   const messageRef = useRef<HTMLInputElement>(null);
   const sendRef = useRef<HTMLDivElement>(null);
@@ -28,11 +28,10 @@ function Home() {
   const heroTextRef = useRef(null)
   const SendMessageRef = useRef(null)
   const navRef = useRef(null)
-  const aboutRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
-  const homeRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>
-  const aboutContainerRef = useRef(null)
-  const aboutSectionRef = useRef(null)
-  const experienceSectionRef = useRef(null)
+  const aboutWindowRef = useRef(null)
+  const projectWindowRef = useRef(null)
+  const contactWindowRef = useRef(null)
+
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -106,16 +105,7 @@ function Home() {
     inputElem.addEventListener("input", handleInput);
   }
 
-  return () => {
-    if (inputElem) {
-      inputElem.removeEventListener("input", handleInput);
-    }
-  };
-}, [showHome]);
-
-  useEffect(() => {
-    if (sendRef.current) {
-      if (isTyping) {
+      if (sendRef.current) {
         gsap.to(sendRef.current, {
           opacity: 1,
           scale: 1,
@@ -123,52 +113,28 @@ function Home() {
           ease: "expo.out",
         });
       }
-    }
-  }, [isTyping]);
 
-  const handleNav = (navLabel: string) => {
-    const refs: Record<string, React.RefObject<HTMLDivElement>> = {
-      About: aboutRef,
-      Home: homeRef,
+  return () => {
+    if (inputElem) {
+      inputElem.removeEventListener("input", handleInput);
     }
+  };
+}, [showHome, isTyping]);
 
-    const sectionRef = refs[navLabel]
-    if (sectionRef.current) {
-      sectionRef.current.scrollIntoView({behavior: "smooth"}) 
-    }
+
+  //Displays the current window. Home would be the default state of window.
+  const handleCurrentWindow = (currentWindow: string) => {
+    setWindow(currentWindow)
   }
 
   useEffect(() => {
-    if (!aboutRef.current || !aboutContainerRef.current) return;
+    if(!window)return
 
-    const tl = gsap.timeline({
-      paused: true,
-    });
-
-    tl.fromTo(
-      aboutContainerRef.current,
-      { y: 100, opacity: 0, scale: 0.95 },
-      {
-        y: 0,
-        opacity: 1,
-        scale: 1,
-        duration: 0.2,
-        ease: "linear",
-      }
-    );
-
-    const scrollTrigger = ScrollTrigger.create({
-      trigger: aboutRef.current,
-      start: "top 50%",
-      onEnter: () => tl.play(),
-      once: true,
-    });
-
-    return () => {
-      tl.kill();
-      scrollTrigger.kill();
-    };
-  }, [showHome]);
+    const  tl = gsap.timeline()
+    if (aboutWindowRef.current || projectWindowRef.current || contactWindowRef.current ) {
+      tl.from([aboutWindowRef.current, projectWindowRef.current, contactWindowRef.current], {width: 10, height: 10, top: 120, borderRadius: "100%", duration: 0.25, ease: "linear"})
+    }
+  }, [window])
 
   return (
     <>
@@ -200,17 +166,26 @@ function Home() {
       )}
       {showHome && (
         <HomeWrapper>
-          <div ref={homeRef} className="flex items-center justify-center w-screen h-screen">
+          <div className="flex items-center justify-center w-screen h-screen">
             <NavModel ref={navRef} className="opacity-0 scale-x-0">
               <Avatar>
-                <button onClick={() => handleNav('Home')} className="relative w-[44px] h-[44px] flex items-centere justify-center">
+                <button
+                  onClick={() => handleCurrentWindow("Home")}
+                  className="relative w-[44px] h-[44px] flex items-centere justify-center"
+                >
                   <img src="/sprite.png" alt="A simplyliam sprite" />
                 </button>
               </Avatar>
               <NavShell>
-                <CustomButton onClick={() => handleNav("Projects")}>Projects</CustomButton>
-                <CustomButton onClick={() => handleNav("About")}>About</CustomButton>
-                <CustomButton onClick={() => handleNav("Contact")}>Contact</CustomButton>
+                <CustomButton onClick={() => handleCurrentWindow("Projects")}>
+                  Projects
+                </CustomButton>
+                <CustomButton onClick={() => handleCurrentWindow("About")}>
+                  About
+                </CustomButton>
+                <CustomButton onClick={() => handleCurrentWindow("Contacts")}>
+                  Contact
+                </CustomButton>
               </NavShell>
             </NavModel>
             <div
@@ -231,19 +206,27 @@ function Home() {
               )}
             </Message>
           </div>
-          <AboutWrapper ref={aboutRef} className="relative overflow-hidden h-[150vh]">
-              <div ref={aboutContainerRef} className="absolute w-[97%] h-[97%] flex flex-col rounded-2xl transition-all duration-300 overflow-auto">
-                <div className="w-full min-h-full overflow-x-hidden  text-black">
-                    <div ref={aboutSectionRef} className="flex items-center justify-center w-full h-[100vh] bg-slate-200">
-                    <h1 className="text-[23em] font-semibold mix-blend-overlay">ABOUT</h1>
-                    </div> 
-                    <div ref={experienceSectionRef} className="flex items-center justify-center w-full h-[100vh] bg-slate-200">
-                    <h1 className="text-[13em] font-semibold mix-blend-overlay">EXPERIENCE</h1>
-                    </div> 
-                </div>
+          {window === "About" && (
+            <div className="flex items-center justify-center w-screen h-screen absolute">
+              <div ref={aboutWindowRef} className="flex items-center justify-center w-[97%] h-[97%] rounded-xl bg-stone-600 absolute">
+                Hello About
               </div>
-
-          </AboutWrapper>
+            </div>
+          )}
+          {window === "Projects" && (
+            <div className="flex items-center justify-center w-screen h-screen absolute">
+              <div ref={aboutWindowRef} className="flex items-center justify-center w-[97%] h-[97%] rounded-xl bg-stone-600 absolute">
+                Hello Projects
+              </div>
+            </div>
+          )}
+          {window === "Contacts" && (
+            <div className="flex items-center justify-center w-screen h-screen absolute">
+              <div ref={aboutWindowRef} className="flex items-center justify-center w-[97%] h-[97%] rounded-xl bg-stone-600 absolute">
+                Hello Contacts
+              </div>
+            </div>
+          )}
         </HomeWrapper>
       )}
     </>
