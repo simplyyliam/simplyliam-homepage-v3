@@ -1,54 +1,76 @@
-# React + TypeScript + Vite
+# 🖥️ Liam Matthews — Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to my digital desk.  
+This portfolio showcases who I am, what I create, and the way I think.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ About Me
 
-## Expanding the ESLint configuration
+I’m a creative front-end developer who loves crafting smooth, interactive experiences.  
+I specialize in bringing motion and emotion into user interfaces using tools like:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **React** & **TypeScript**
+- **TailwindCSS** (v4)
+- **GSAP** & **Three.js**
+- Clean design systems with **glassmorphism** and **shadow play**
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+I’m currently building fun concepts like `Dymensh`, `GlassyBird`, `Weegit`, and `Foqusly` ,  
+while constantly exploring new ways to blend UI/UX with subtle storytelling.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 📂 What's Inside
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+This portfolio contains:
+
+- ✅ Live project demos  
+- 🎨 UI component experiments  
+- 🎥 Micro-interactions inspired by brands like Apple & Figma  
+- 🧪 GSAP animations & 3D scenes  
+- 💡 Concept-driven apps and experiments
+
+Each piece is an exploration of motion, light, and the feel of design.
+
+---
+
+## 🚀 Tech Stack
+
+- React + Vite  
+- TypeScript  
+- TailwindCSS v4  
+- GSAP
+- Three.js  
+- Figma (for design)
+
+---
+
+## 🧠 Philosophy
+
+> "Design should feel like music — minimal, structured, and alive."  
+
+This portfolio isn’t just a showcase; it’s a living space that grows with me.
+Believe it or not, this is already the 8th iteration, and I’m not stopping here.
+
+With every redesign, I get that joyful feeling, the kind that reminds me
+I’m not just learning this stuff, I’m living it.
+Each version brings me closer to becoming the developer I brand myself as.
+I believe in building interfaces that feel **natural**, **fluid**, and **thoughtful** — like art with logic behind it.
+I’m not a professional, I’m just someone who loves what they craft,
+and lives it out with a bang.
+
+---
+
+## 📫 Let's Connect
+
+If you're into thoughtful design, collaboration, or just want to say hey:
+
+- 🌐 [Your Website](https://simplyliam-homepage-v3.vercel.app/)  
+- 📸 [Instagram](https://instagram.com/simplyliam.codes)  
+- 🐱 [GitHub](https://github.com/simplyyliam)  
+- 📨 Email: simplyliam.dev@gmail.com
+
+---
+
+> Thanks for visiting. You didn't just view a portfolio —  
+> You stepped into my creative dimension. ✦
